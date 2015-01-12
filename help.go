@@ -27,6 +27,9 @@ func (c *Help) Run() {
 
 			flagDocs := []string{}
 			command.SetFlags()
+			if Global != nil {
+				Global(command.GetFlagSet())
+			}
 			command.GetFlagSet().VisitAll(func(f *flag.Flag) {
 				var defValue string
 				if f.DefValue != "" {

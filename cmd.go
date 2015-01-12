@@ -11,6 +11,7 @@ import (
 var (
 	appName string
 	commandSet = make(map[string]Command)
+	Global func (*flag.FlagSet)
 )
 
 type Flagger struct {
@@ -38,6 +39,9 @@ func Add(commands ...Command) {
 		name := strutil.Hyphenate(t.Name())
 		commandSet[name] = c
 		if len(os.Args) > 1 && name == os.Args[1] && name != "help" {
+			if Global != nil {
+				Global(c.GetFlagSet())
+			}
 			c.SetFlags()
 			c.Parse(os.Args[2:])
 		}
